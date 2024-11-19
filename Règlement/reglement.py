@@ -1,14 +1,18 @@
-import discord
-from discord.ext import commands, tasks
 import os
-import asyncio
+import discord
+from discord.ext import commands
+
+print("Le bot démarre...")  # Message de debug
 
 # Définir les intents nécessaires pour le bot
 intents = discord.Intents.default()
-intents.message_content = True
+intents.messages = True
 
 # Initialisation du bot avec les intents
 bot = commands.Bot(command_prefix='!', intents=intents)
+
+# Message de debug pour vérifier l'initialisation du bot
+print("Le bot a été initialisé avec succès.")
 
 # Parties du règlement
 reglement_part1 = """
@@ -65,27 +69,10 @@ reglement_part6 = """
 **_Enfreindre l'une des directives de Discord sera signalé à Discord, entraînant un bannissement permanent._**
 """
 
-# Dictionnaire pour suivre les temps d'utilisation des commandes
-cooldown_users = {}
-
-# Durée de cooldown en secondes
-COOLDOWN_DURATION = 30
-
-# Commande pour afficher le règlement avec un cooldown
+# Commande pour afficher le règlement
 @bot.command()
 async def reglement(ctx):
-    current_time = asyncio.get_event_loop().time()
-    user_id = ctx.message.author.id
-
-    if user_id in cooldown_users:
-        last_time = cooldown_users[user_id]
-        if current_time - last_time < COOLDOWN_DURATION:
-            wait_time = COOLDOWN_DURATION - (current_time - last_time)
-            await ctx.send(f"Vous devez attendre {wait_time:.2f} secondes avant d'utiliser cette commande à nouveau.")
-            return
-
-    cooldown_users[user_id] = current_time
-
+    print("La commande 'reglement' a été appelée.")  # Message de debug
     embed = discord.Embed(title="Règlement du Serveur", color=discord.Color.blue())
     embed.add_field(name="", value=reglement_part1, inline=False)
     embed.add_field(name="", value=reglement_part2, inline=False)
@@ -94,14 +81,14 @@ async def reglement(ctx):
     embed.add_field(name="", value=reglement_part5, inline=False)
     embed.add_field(name="Informations importantes", value=reglement_part6, inline=False)
     await ctx.send(embed=embed)
+    print("Le règlement a été envoyé.")  # Message de debug
 
-# Utilise la variable d'environnement pour le jeton
+# Utilisation du secret pour le token Discord
 token = os.getenv('DISCORD_BOT_TOKEN')
 if token:
+    print("Le token a été trouvé.")  # Message de debug
     bot.run(token)
 else:
-    print("Erreur : Le jeton du bot Discord n'est pas défini")
+    print("Erreur : Le jeton du bot Discord n'est pas défini")  # Message de debug
 
-print("Le bot est en train de démarrer...")
-
-# Fin du bot règlement
+print("Le bot est en train de démarrer...")  # Message de debug
