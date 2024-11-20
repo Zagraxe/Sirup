@@ -1,12 +1,8 @@
 import os
 import discord
 from discord.ext import commands
-from dotenv import load_dotenv
 
 print("Le bot démarre...")  # Message de debug
-
-# Charger les variables d'environnement depuis le fichier .env
-load_dotenv()
 
 # Définir les intents nécessaires pour le bot
 intents = discord.Intents.default()
