@@ -7,6 +7,7 @@ print("Le bot démarre...")  # Message de debug
 # Définir les intents nécessaires pour le bot
 intents = discord.Intents.default()
 intents.messages = True
+intents.message_content = True  # Ajout de l'intent pour le contenu des messages
 
 # Initialisation du bot avec les intents
 bot = commands.Bot(command_prefix='!', intents=intents)
