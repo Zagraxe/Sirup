@@ -64,7 +64,7 @@ async def send_welcome_message(member):
         avatar.putalpha(mask)  # Appliquer le masque pour rendre l'avatar circulaire
 
         print("Création de l'image de bienvenue...")
-        background = Image.open('background.png').convert("RGBA")
+        background = Image.open('bienvenu/Roboto.png').convert("RGBA")
 
         # Positionner l'avatar à la position (20, 10)
         avatar_x = 20
@@ -75,7 +75,7 @@ async def send_welcome_message(member):
 
         # Ajouter le texte du pseudo à la position (115, 25)
         draw = ImageDraw.Draw(background)
-        font = ImageFont.truetype('Roboto-Bold.ttf', 45)  # Taille de la police réduite à 45
+        font = ImageFont.truetype('bienvenu/Roboto-Bold.ttf', 45)  # Taille de la police réduite à 45
         text = member.display_name
 
         # Positionner le texte selon les nouvelles coordonnées (115, 25)
