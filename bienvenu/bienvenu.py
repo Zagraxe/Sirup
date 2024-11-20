@@ -4,6 +4,10 @@ from discord.ext import commands
 from PIL import Image, ImageDraw, ImageFont
 import requests
 from io import BytesIO
+from dotenv import load_dotenv
+
+# Charger les variables d'environnement depuis le fichier .env
+load_dotenv()
 
 # Définir le token à partir des variables d'environnement
 token = os.getenv('DISCORD_BOT_TOKEN')
