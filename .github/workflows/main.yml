@@ -31,3 +31,4 @@ jobs:
         python shifumi/shifumi.py         # Lancer shifumi.py
       env:
         DISCORD_BOT_TOKEN: ${{ secrets.DISCORD_BOT_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
