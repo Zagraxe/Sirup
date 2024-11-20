@@ -86,8 +86,6 @@ async def citations(ctx):
 
 @bot.event
 async def on_message(message):
-    global keywords_enabled
-
     if message.author == bot.user:
         return
 
@@ -106,15 +104,17 @@ async def on_message(message):
 @commands.has_permissions(administrator=True)
 async def enable_keywords(ctx):
     global keywords_enabled
-    keywords_enabled = True
-    await ctx.send("JE SUIS PRÉSENT !|La fonctionnalité des mots-clés a été activée.|")
+    if not keywords_enabled:  # Vérifier si la fonction est déjà activée
+        keywords_enabled = True
+        await ctx.send("JE SUIS PRÉSENT ! La fonctionnalité des mots-clés a été activée.")
 
 @bot.command(name='Siroff')
 @commands.has_permissions(administrator=True)
 async def disable_keywords(ctx):
     global keywords_enabled
-    keywords_enabled = False
-    await ctx.send("Sir up a quitté. |La fonctionnalité des mots-clés a été désactivée.|")
+    if keywords_enabled:  # Vérifier si la fonction est déjà désactivée
+        keywords_enabled = False
+        await ctx.send("Sir up a quitté. La fonctionnalité des mots-clés a été désactivée.")
 
 # Démarrer le bot
 if token:
