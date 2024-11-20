@@ -27,6 +27,6 @@ jobs:
       run: |
         echo DISCORD_BOT_TOKEN=${{ secrets.DISCORD_BOT_TOKEN }} >> .env
         python citations/citations.py &   # Lancer citations.py en arrière-plan
-        python reglement.py               # Lancer reglement.py
+        python Règlement/reglement.py     # Lancer reglement.py depuis le dossier Règlement
       env:
         DISCORD_BOT_TOKEN: ${{ secrets.DISCORD_BOT_TOKEN }}
