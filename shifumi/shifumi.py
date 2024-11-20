@@ -81,9 +81,10 @@ async def choisir(ctx, choix: str):
     embed.add_field(name="Choix du bot", value=bot_choice)
     embed.add_field(name="Résultat", value=result)
     embed.add_field(name="Score", value=f"Gagné: {scores[ctx.author.id]['win']}, Perdu: {scores[ctx.author.id]['loss']}, Égalité: {scores[ctx.author.id]['draw']}")
+    embed.set_footer(text="Tape !Sscore pour voir le classement actuel")
     await ctx.send(embed=embed)
 
-@bot.command(name='scoreshifumi')
+@bot.command(name='Sscore')
 async def scoreshifumi(ctx):
     # Ajouter un utilisateur fictif pour le bot
     bot_user = type("BotUser", (object,), {"name": "Sir Up", "id": "bot"})
@@ -102,7 +103,7 @@ async def scoreshifumi(ctx):
             user = await ctx.bot.fetch_user(user_id)
         lines.append(f"Top {i}. {user.name}                {score['win']}/{score['loss']}")
     embed.add_field(name="Top Joueurs", value="\n".join(lines), inline=True)
-    print("Commande !scoreshifumi appelée.")
+    print("Commande !Sscore appelée.")
     await ctx.send(embed=embed)
 
 # Démarrer le bot
