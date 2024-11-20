@@ -108,7 +108,8 @@ async def disable_keywords(ctx):
         keywords_enabled = False
         await ctx.send("Sir up a quitté. La fonctionnalité des mots-clés a été désactivée.")
 
-# Démarrer le bot
+# Utilisation du secret pour le token Discord
+token = os.getenv('DISCORD_BOT_TOKEN')
 if token:
     print("Le token a été trouvé.")  # Message de debug
     bot.run(token)
