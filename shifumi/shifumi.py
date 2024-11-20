@@ -35,11 +35,14 @@ async def on_ready():
 
 @bot.event
 async def on_command_error(ctx, error):
-    if isinstance(error, commands.CommandNotFound):
+    if isinstance(error, commands.CommandNotFound) and ctx.command.name in ['shifumi', 'choisir']:
         await ctx.send(
             "Commande non trouvée. Assurez-vous d'utiliser les commandes correctes : !shifumi et !choisir [ton choix]."
         )
         print(f"Erreur : {error}")
+    else:
+        # Laisser la gestion des erreurs standard de discord.py s'occuper des autres commandes
+        raise error
 
 @bot.command(name='shifumi')
 async def shifumi(ctx):
