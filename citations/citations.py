@@ -15,6 +15,7 @@ if not token:
 
 # Définir les intents nécessaires
 intents = discord.Intents.default()
+intents.messages = True
 intents.message_content = True
 
 # Initialisation du bot avec les intents
