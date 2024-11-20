@@ -15,20 +15,24 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
+
     - name: Set up Python
       uses: actions/setup-python@v2
       with:
         python-version: '3.x'
+
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
         pip install -r requirements.txt
+
     - name: Run bot
       run: |
         echo DISCORD_BOT_TOKEN=${{ secrets.DISCORD_BOT_TOKEN }} >> .env
         python citations/citations.py &   # Lancer citations.py en arrière-plan
         python Règlement/reglement.py &   # Lancer reglement.py en arrière-plan
-        python shifumi/shifumi.py         # Lancer shifumi.py
+        python shifumi/shifumi.py &       # Lancer shifumi.py en arrière-plan
+        python bienvenu/bienvenu.py       # Lancer bienvenu.py
       env:
         DISCORD_BOT_TOKEN: ${{ secrets.DISCORD_BOT_TOKEN }}
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
