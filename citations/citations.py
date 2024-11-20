@@ -107,14 +107,14 @@ async def on_message(message):
 async def enable_keywords(ctx):
     global keywords_enabled
     keywords_enabled = True
-    await ctx.send("JE SUIS PRÉSENT ! La fonctionnalité des mots-clés a été activée.")
+    await ctx.send("JE SUIS PRÉSENT !|La fonctionnalité des mots-clés a été activée.|")
 
 @bot.command(name='Siroff')
 @commands.has_permissions(administrator=True)
 async def disable_keywords(ctx):
     global keywords_enabled
     keywords_enabled = False
-    await ctx.send("Sir up a quitté. La fonctionnalité des mots-clés a été désactivée.")
+    await ctx.send("Sir up a quitté. |La fonctionnalité des mots-clés a été désactivée.|")
 
 # Démarrer le bot
 if token:
