@@ -22,11 +22,14 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install -r requirements.txt
+        pip install -r citations/requirements.txt
+        pip install -r Règlement/requirements.txt
+        pip install -r shifumi/requirements.txt
     - name: Run bot
       run: |
         echo DISCORD_BOT_TOKEN=${{ secrets.DISCORD_BOT_TOKEN }} >> .env
         python citations/citations.py &   # Lancer citations.py en arrière-plan
-        python Règlement/reglement.py     # Lancer reglement.py depuis le dossier Règlement
+        python Règlement/reglement.py &   # Lancer reglement.py en arrière-plan
+        python shifumi/shifumi.py         # Lancer shifumi.py
       env:
         DISCORD_BOT_TOKEN: ${{ secrets.DISCORD_BOT_TOKEN }}
