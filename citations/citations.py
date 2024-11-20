@@ -45,8 +45,13 @@ async def before():
     print("Bot prêt à envoyer des citations quotidiennes")
 
 def get_random_quote():
-    # Lire les citations depuis le fichier citations/citation.txt
-    with open('citations/citation.txt', 'r', encoding='utf-8') as f:
+    # Vérifier si le fichier existe
+    file_path = 'citations/citations.txt'
+    if not os.path.isfile(file_path):
+        return "Erreur : Le fichier de citations n'existe pas."
+
+    # Lire les citations depuis le fichier
+    with open(file_path, 'r', encoding='utf-8') as f:
         quotes = f.readlines()
     return random.choice(quotes).strip()
 
@@ -55,6 +60,10 @@ def create_embed(title, description):
     return embed
 
 def load_keywords(file_path):
+    if not os.path.isfile(file_path):
+        print(f"Erreur : Le fichier {file_path} n'existe pas.")
+        return {}
+
     keywords = {}
     with open(file_path, 'r', encoding='utf-8') as f:
         lines = f.readlines()
@@ -69,8 +78,11 @@ keywords = load_keywords('citations/keywords.txt')
 @bot.command(name='citations')
 async def citations(ctx):
     quote = get_random_quote()
-    embed = create_embed("Citation du jour", quote)
-    await ctx.send(embed=embed)
+    if "Erreur" in quote:
+        await ctx.send(quote)
+    else:
+        embed = create_embed("Citation du jour", quote)
+        await ctx.send(embed=embed)
 
 @bot.event
 async def on_message(message):
