@@ -44,8 +44,8 @@ async def testewelcom(ctx):
 
 async def send_welcome_message(member):
     print(f"Envoi du message de bienvenue pour {member.display_name}")
-    # Utiliser le nouvel ID du canal mis à jour
-    channel_id = NOUVEL_ID_DE_CANAL  # Remplace 'NOUVEL_ID_DE_CANAL' par le nouvel ID que tu m'as fourni
+    # Utiliser l'ID réel du canal
+    channel_id = 123456789012345678  # Remplace '123456789012345678' par l'ID de ton canal
     channel = bot.get_channel(channel_id)
 
     if channel is not None:
@@ -75,7 +75,7 @@ async def send_welcome_message(member):
 
         # Ajouter le texte du pseudo à la position (115, 25)
         draw = ImageDraw.Draw(background)
-        font = ImageFont.truetype('bienvenu/Roboto-Bold.ttf', 45)  # Taille de la police réduite à 45
+        font = ImageFont.truetype('bienvenu/Roboto-Bold.ttf', 45)
         text = member.display_name
 
         # Positionner le texte selon les nouvelles coordonnées (115, 25)
