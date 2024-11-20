@@ -5,18 +5,10 @@ import random
 
 print("Le bot démarre...")  # Message de debug
 
-# Définir le token à partir des variables d'environnement
-token = os.getenv('DISCORD_BOT_TOKEN')
-
-# Vérifier que les variables d'environnement sont définies
-if not token:
-    print("Erreur : Token non défini.")
-    exit(1)
-
-# Définir les intents nécessaires
+# Définir les intents nécessaires pour le bot
 intents = discord.Intents.default()
 intents.messages = True
-intents.message_content = True
+intents.message_content = True  # Assurez-vous que l'intent est activé
 
 # Initialisation du bot avec les intents
 bot = commands.Bot(command_prefix='!', intents=intents)
@@ -104,7 +96,7 @@ async def on_message(message):
 @commands.has_permissions(administrator=True)
 async def enable_keywords(ctx):
     global keywords_enabled
-    if not keywords_enabled:  # Vérifier si la fonction est déjà activée
+    if not keywords_enabled:  # Vérifier si la fonctionnalité est déjà activée
         keywords_enabled = True
         await ctx.send("JE SUIS PRÉSENT ! La fonctionnalité des mots-clés a été activée.")
 
@@ -112,7 +104,7 @@ async def enable_keywords(ctx):
 @commands.has_permissions(administrator=True)
 async def disable_keywords(ctx):
     global keywords_enabled
-    if keywords_enabled:  # Vérifier si la fonction est déjà désactivée
+    if keywords_enabled:  # Vérifier si la fonctionnalité est déjà désactivée
         keywords_enabled = False
         await ctx.send("Sir up a quitté. La fonctionnalité des mots-clés a été désactivée.")
 
