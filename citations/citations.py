@@ -14,7 +14,7 @@ intents.message_content = True  # Assurez-vous que l'intent est activé
 bot = commands.Bot(command_prefix='!', intents=intents)
 
 # Remplace par l'ID de ton salon de citations
-channel_id = 1137146690516824077
+channel_id = 1290357742153764996
 
 # Indicateur pour activer ou désactiver la fonctionnalité des mots-clés
 keywords_enabled = True
@@ -73,8 +73,8 @@ def load_keywords(file_path):
 # Charger les mots-clés
 keywords = load_keywords('citations/keywords.txt')
 
-@bot.command(name='citations')
-async def citations(ctx):
+@bot.command(name='citation')
+async def citation(ctx):
     quote = get_random_quote()
     if "Erreur" in quote:
         await ctx.send(quote)
