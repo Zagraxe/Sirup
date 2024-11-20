@@ -45,7 +45,7 @@ async def testewelcom(ctx):
 async def send_welcome_message(member):
     print(f"Envoi du message de bienvenue pour {member.display_name}")
     # Utiliser l'ID réel du canal
-    channel_id = 123456789012345678  # Remplace '123456789012345678' par l'ID de ton canal
+    channel_id = 1137146690516824077  # Remplace par l'ID de ton canal
     channel = bot.get_channel(channel_id)
 
     if channel is not None:
@@ -55,40 +55,35 @@ async def send_welcome_message(member):
         avatar = Image.open(BytesIO(response.content)).convert("RGBA")
 
         # Créer un masque circulaire parfait pour l'avatar
-        mask = Image.new('L', (70, 70), 0)  # Créer une image en niveaux de gris de 70x70 pixels
+        mask = Image.new('L', (70, 70), 0)
         draw_mask = ImageDraw.Draw(mask)
-        draw_mask.ellipse((0, 0, 70, 70), fill=255)  # Dessiner un cercle plein
+        draw_mask.ellipse((0, 0, 70, 70), fill=255)
 
         # Appliquer le masque à l'avatar et redimensionner
         avatar = avatar.resize((70, 70))
-        avatar.putalpha(mask)  # Appliquer le masque pour rendre l'avatar circulaire
+        avatar.putalpha(mask)
 
         print("Création de l'image de bienvenue...")
         background = Image.open('bienvenu/Roboto.png').convert("RGBA")
 
-        # Positionner l'avatar à la position (20, 10)
         avatar_x = 20
         avatar_y = 10
 
-        # Ajouter l'avatar sur l'arrière-plan
         background.paste(avatar, (avatar_x, avatar_y), avatar)
 
-        # Ajouter le texte du pseudo à la position (115, 25)
         draw = ImageDraw.Draw(background)
         font = ImageFont.truetype('bienvenu/Roboto-Bold.ttf', 45)
         text = member.display_name
 
-        # Positionner le texte selon les nouvelles coordonnées (115, 25)
         text_x = 115
         text_y = 25
 
-        # Dessiner le texte en blanc brillant
         draw.text((text_x, text_y), text, font=font, fill=(255, 255, 255))
 
         background.save('welcome.png')
 
         print("Envoi du message de bienvenue...")
-        embed = discord.Embed(color=0x8aa8aa)  # Vert d'eau doux
+        embed = discord.Embed(color=0x8aa8aa)
         embed.set_image(url="attachment://welcome.png")
         embed.description = f'Bienvenue parmi nous, {member.mention} !'
         await channel.send(embed=embed, file=discord.File('welcome.png'))
