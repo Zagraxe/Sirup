@@ -5,6 +5,10 @@ on:
     branches:
       - main
 
+concurrency:
+  group: bot-actions
+  cancel-in-progress: true
+
 jobs:
   run-bot:
     runs-on: ubuntu-latest
@@ -22,6 +26,6 @@ jobs:
     - name: Run bot
       run: |
         echo DISCORD_BOT_TOKEN=${{ secrets.DISCORD_BOT_TOKEN }} >> .env
-        python citations/citations.py
+        python citations.py
       env:
         DISCORD_BOT_TOKEN: ${{ secrets.DISCORD_BOT_TOKEN }}
