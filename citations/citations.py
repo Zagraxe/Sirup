@@ -13,10 +13,14 @@ intents.message_content = True  # Assurez-vous que l'intent est activé
 # Initialisation du bot avec les intents
 bot = commands.Bot(command_prefix='!', intents=intents)
 
-channel_id = 1307995646388863018  # Ton ID de salon de tests
+# Remplace par l'ID de ton salon de citations
+channel_id = 1137146690516824077
 
 # Indicateur pour activer ou désactiver la fonctionnalité des mots-clés
 keywords_enabled = True
+
+# Indicateur pour activer ou désactiver l'envoi des citations quotidiennes
+daily_quotes_enabled = True
 
 @bot.event
 async def on_ready():
@@ -26,10 +30,12 @@ async def on_ready():
 
 @tasks.loop(hours=24)
 async def send_daily_quote():
-    channel = bot.get_channel(channel_id)
-    quote = get_random_quote()
-    embed = create_embed("Citation du jour", quote)
-    await channel.send(embed=embed)
+    global daily_quotes_enabled
+    if daily_quotes_enabled:
+        channel = bot.get_channel(channel_id)
+        quote = get_random_quote()
+        embed = create_embed("Citation du jour", quote)
+        await channel.send(embed=embed)
 
 @send_daily_quote.before_loop
 async def before():
@@ -107,6 +113,22 @@ async def disable_keywords(ctx):
     if keywords_enabled:  # Vérifier si la fonctionnalité est déjà désactivée
         keywords_enabled = False
         await ctx.send("Sir up a quitté. La fonctionnalité des mots-clés a été désactivée.")
+
+@bot.command(name='Cion')
+@commands.has_permissions(administrator=True)
+async def enable_daily_quotes(ctx):
+    global daily_quotes_enabled
+    if not daily_quotes_enabled:  # Vérifier si la fonctionnalité est déjà activée
+        daily_quotes_enabled = True
+        await ctx.send("Les citations quotidiennes ont été activées.")
+
+@bot.command(name='Cioff')
+@commands.has_permissions(administrator=True)
+async def disable_daily_quotes(ctx):
+    global daily_quotes_enabled
+    if daily_quotes_enabled:  # Vérifier si la fonctionnalité est déjà désactivée
+        daily_quotes_enabled = False
+        await ctx.send("Les citations quotidiennes ont été désactivées.")
 
 # Utilisation du secret pour le token Discord
 token = os.getenv('DISCORD_BOT_TOKEN')
