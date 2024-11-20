@@ -22,9 +22,7 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install -r citations/requirements.txt
-        pip install -r Règlement/requirements.txt
-        pip install -r shifumi/requirements.txt
+        pip install -r requirements.txt
     - name: Run bot
       run: |
         echo DISCORD_BOT_TOKEN=${{ secrets.DISCORD_BOT_TOKEN }} >> .env
