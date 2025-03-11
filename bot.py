@@ -1,50 +1,47 @@
 import os
-import random
 from discord.ext import commands
-from ia import obtenir_reponse  # Fonction IA Hugging Face pour générer des réponses
+from ia import obtenir_reponse  # Fonction IA pour les réponses dynamiques
 import discord
 
-# Initialisation du bot avec intents
+# Initialisation du bot
 intents = discord.Intents.default()
 intents.messages = True
 bot = commands.Bot(command_prefix='!', intents=intents)
 
-# Liste des phrases motivantes
-phrases_motivantes = [
-    "Continue ! Le succès n'est qu'à un pas ! 🌟",
-    "Chaque échec te rapproche de la réussite. 💪",
-    "Tu es plus fort(e) que tu ne le penses. 🚀"
-]
-
-# Commande : Motivation
-@bot.command()
-async def motive(ctx):
-    phrase = random.choice(phrases_motivantes)
-    await ctx.send(phrase)
-
-# Réponse dynamique : Mention directe du bot
+# Répondre automatiquement aux mentions
 @bot.event
 async def on_message(message):
-    if bot.user in message.mentions:  # Si le bot est mentionné
-        contenu_message = message.content.lower()
-        if "qui t'a créé" in contenu_message or "qui est ton créateur" in contenu_message:
-            await message.channel.send("Je suis fier de dire que j'ai été créé par **Zagraxe** ! ⚔️💻")
-        else:
+    # Vérifie si le bot est mentionné
+    if bot.user in message.mentions:
+        # Log pour débogage
+        print(f"Message reçu : {message.content}")
+
+        # Gérer les réponses via l'IA
+        try:
+            # Préparation du prompt pour l'IA
             prompt = f"Tu es Sirup, un chevalier médiéval inspirant et motivant. Réponds avec sagesse : {message.content}"
             reponse = obtenir_reponse(prompt)
+
+            # Envoyer la réponse de l'IA dans le salon
             await message.channel.send(reponse)
 
+        except Exception as e:
+            # Gère les erreurs et informe l'utilisateur
+            print(f"Erreur dans la génération IA : {e}")
+            await message.channel.send("Je suis désolé, je n'ai pas pu répondre. Une erreur est survenue avec l'IA.")
+
+    # Assure-toi que les autres commandes du bot fonctionnent
     await bot.process_commands(message)
 
-# Événement : Message de bienvenue
+# Message de bienvenue
 @bot.event
 async def on_ready():
     print(f"{bot.user} est prêt !")
-    channel_id = 1147544010580303933  # Remplace par l'ID de ton salon principal
+    channel_id = 1147544010580303933  # Remplace avec l'ID du salon de test
     channel = bot.get_channel(channel_id)
     if channel:
         await channel.send("Salut à tous ! Je suis **Sirup**, votre chevalier inspirant et motivant. 🤖⚔️\n\n"
-                           "Posez-moi vos questions, et je suis là pour y répondre avec honneur !")
+                           "Mentionnez-moi, et je vous répondrai avec honneur !")
 
 # Lancer le bot
 bot.run(os.getenv("DISCORD_BOT_TOKEN"))
