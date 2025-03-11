@@ -40,7 +40,7 @@ def obtenir_reponse(prompt):
                     response_text = result[0]["generated_text"]
                     # Vérifie si la réponse est identique au prompt
                     if response_text.strip() == prompt.strip():
-                        return "Je suis désolé, je n'ai pas compris. Peux-tu reformuler ?"
+                        return "Je suis désolé, je ne peux pas répondre précisément. Peux-tu reformuler ?"
                     return response_text
                 else:
                     return "L'API n'a pas généré de texte valide. Réessaie plus tard."
