@@ -5,10 +5,10 @@ import discord
 
 # Initialisation du bot
 intents = discord.Intents.default()
-intents.messages = True
+intents.voice_states = False  # Désactiver les fonctionnalités vocales
 bot = commands.Bot(command_prefix='!', intents=intents)
 
-# ID du salon où le bot sera actif (remplace 123456789012345678 par ton ID réel)
+# ID du salon où le bot est actif (remplace avec ton ID réel)
 TEST_CHANNEL_ID = 123456789012345678  # Remplace cet ID
 
 # Fonction pour répondre dynamiquement aux mentions
