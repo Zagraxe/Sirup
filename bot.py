@@ -8,21 +8,22 @@ intents = discord.Intents.default()
 intents.messages = True
 bot = commands.Bot(command_prefix='!', intents=intents)
 
-# Répondre automatiquement aux mentions
+# Événement : Répondre aux messages où le bot est mentionné
 @bot.event
 async def on_message(message):
+    # Ignore les messages envoyés par le bot lui-même
+    if message.author == bot.user:
+        return
+
     # Vérifie si le bot est mentionné
     if bot.user in message.mentions:
-        # Log pour débogage
-        print(f"Message reçu : {message.content}")
-
-        # Gérer les réponses via l'IA
         try:
-            # Préparation du prompt pour l'IA
-            prompt = f"Tu es Sirup, un chevalier médiéval inspirant et motivant. Réponds avec sagesse : {message.content}"
+            # Nettoie le message pour enlever les mentions
+            clean_content = message.content.replace(f"<@{bot.user.id}>", "").strip()
+            prompt = f"Tu es Sirup, un chevalier médiéval inspirant et motivant. Réponds avec sagesse : {clean_content}"
+            
+            # Appel à l'IA pour une réponse
             reponse = obtenir_reponse(prompt)
-
-            # Envoyer la réponse de l'IA dans le salon
             await message.channel.send(reponse)
 
         except Exception as e:
@@ -30,14 +31,14 @@ async def on_message(message):
             print(f"Erreur dans la génération IA : {e}")
             await message.channel.send("Je suis désolé, je n'ai pas pu répondre. Une erreur est survenue avec l'IA.")
 
-    # Assure-toi que les autres commandes du bot fonctionnent
+    # Continue à traiter d'autres commandes
     await bot.process_commands(message)
 
-# Message de bienvenue
+# Événement : Message de bienvenue
 @bot.event
 async def on_ready():
     print(f"{bot.user} est prêt !")
-    channel_id = 1147544010580303933  # Remplace avec l'ID du salon de test
+    channel_id = 1147544010580303933  # Remplace par l'ID de ton salon de test
     channel = bot.get_channel(channel_id)
     if channel:
         await channel.send("Salut à tous ! Je suis **Sirup**, votre chevalier inspirant et motivant. 🤖⚔️\n\n"
