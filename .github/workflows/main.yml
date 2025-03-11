@@ -38,14 +38,14 @@ jobs:
         ls -la ./
         ls -la citations/
         ls -la shifumi/
-        ls -la Reglement/
+        ls -la Règlement/
         if [ ! -f "bot.py" ]; then echo "Erreur : bot.py est manquant !" && exit 1; fi
         if [ ! -f "ia.py" ]; then echo "Erreur : ia.py est manquant !" && exit 1; fi
         if [ ! -f "citations/citations.py" ]; then echo "Erreur : citations.py est manquant !" && exit 1; fi
         if [ ! -f "citations/keywords.txt" ]; then echo "Erreur : keywords.txt est manquant !" && exit 1; fi
         if [ ! -f "citations/citations.txt" ]; then echo "Erreur : citations.txt est manquant !" && exit 1; fi
         if [ ! -f "shifumi/shifumi.py" ]; then echo "Erreur : shifumi.py est manquant !" && exit 1; fi
-        if [ ! -f "Reglement/reglement.py" ]; then echo "Erreur : reglement.py est manquant !" && exit 1; fi
+        if [ ! -f "Règlement/reglement.py" ]; then echo "Erreur : reglement.py est manquant !" && exit 1; fi
 
     # Étape 5 : Lancer le fichier principal (bot.py)
     - name: Run main bot
@@ -74,4 +74,4 @@ jobs:
       env:
         DISCORD_BOT_TOKEN: ${{ secrets.DISCORD_BOT_TOKEN }}
       run: |
-        python Reglement/reglement.py
+        python Règlement/reglement.py
