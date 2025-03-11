@@ -3,7 +3,7 @@ name: Run Discord Bot
 on:
   push:
     branches:
-      - main  # Exécute le workflow à chaque push sur main
+      - main  # Exécute le workflow à chaque push sur la branche "main"
   schedule:
     - cron: "0 */5 * * *"  # Exécution automatique toutes les 5 heures
 
@@ -32,46 +32,51 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt
 
-    # Étape 4 : Vérification des scripts
-    - name: Verify all scripts exist
+    # Étape 4 : Vérification des scripts et fichiers nécessaires
+    - name: Verify all scripts and files exist
       run: |
+        echo "Vérification des fichiers et dossiers..."
         ls -la ./
         ls -la citations/
         ls -la shifumi/
-        ls -la Règlement/
+        ls -la Reglement/
         if [ ! -f "bot.py" ]; then echo "Erreur : bot.py est manquant !" && exit 1; fi
         if [ ! -f "ia.py" ]; then echo "Erreur : ia.py est manquant !" && exit 1; fi
         if [ ! -f "citations/citations.py" ]; then echo "Erreur : citations.py est manquant !" && exit 1; fi
         if [ ! -f "citations/keywords.txt" ]; then echo "Erreur : keywords.txt est manquant !" && exit 1; fi
         if [ ! -f "citations/citations.txt" ]; then echo "Erreur : citations.txt est manquant !" && exit 1; fi
         if [ ! -f "shifumi/shifumi.py" ]; then echo "Erreur : shifumi.py est manquant !" && exit 1; fi
-        if [ ! -f "Règlement/reglement.py" ]; then echo "Erreur : reglement.py est manquant !" && exit 1; fi
+        if [ ! -f "Reglement/reglement.py" ]; then echo "Erreur : reglement.py est manquant !" && exit 1; fi
 
     # Étape 5 : Lancer le fichier principal (bot.py)
-    - name: Run main bot
+    - name: Run Main Bot
       env:
         DISCORD_BOT_TOKEN: ${{ secrets.DISCORD_BOT_TOKEN }}
         DISCORD_IA_TOKEN: ${{ secrets.DISCORD_IA_TOKEN }}
       run: |
+        echo "Lancement de bot.py..."
         python bot.py
 
     # Étape 6 : Lancer le bot Citations
-    - name: Run Citations bot
+    - name: Run Citations Bot
       env:
         DISCORD_BOT_TOKEN: ${{ secrets.DISCORD_BOT_TOKEN }}
       run: |
+        echo "Lancement de citations.py..."
         python citations/citations.py
 
     # Étape 7 : Lancer le bot Shifumi
-    - name: Run Shifumi bot
+    - name: Run Shifumi Bot
       env:
         DISCORD_BOT_TOKEN: ${{ secrets.DISCORD_BOT_TOKEN }}
       run: |
+        echo "Lancement de shifumi.py..."
         python shifumi/shifumi.py
 
-    # Étape 8 : Lancer le bot Règlement
-    - name: Run Règlement bot
+    # Étape 8 : Lancer le bot Reglement
+    - name: Run Reglement Bot
       env:
         DISCORD_BOT_TOKEN: ${{ secrets.DISCORD_BOT_TOKEN }}
       run: |
-        python Règlement/reglement.py
+        echo "Lancement de reglement.py..."
+        python Reglement/reglement.py
