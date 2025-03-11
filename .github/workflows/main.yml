@@ -4,8 +4,8 @@ on:
   push:
     branches:
       - main
-  schedule:  # Planifie une exécution automatique toutes les 5 heures
-    - cron: "0 */5 * * *"  # Tâche planifiée (cron job)
+  schedule:  # Planification automatique toutes les 5 heures
+    - cron: "0 */5 * * *"
 
 concurrency:
   group: bot-actions
@@ -37,7 +37,7 @@ jobs:
         python shifumi/shifumi.py &       # Lancer shifumi.py en arrière-plan
         python bienvenu/bienvenu.py &     # Lancer bienvenu.py
 
-        # Tâche périodique avec IA
+        # Intégration de l'IA et des messages automatiques
         python -c "
 import os
 import asyncio
@@ -50,8 +50,8 @@ intents = discord.Intents.default()
 intents.messages = True
 bot = commands.Bot(command_prefix='!', intents=intents)
 
-# ID du salon (remplace par ton ID réel)
-TEST_CHANNEL_ID = 123456789012345678  # Remplace par l'ID de ton salon
+# ID du salon pour les tests
+TEST_CHANNEL_ID = 123456789012345678  # Remplace par ton ID de salon
 
 async def envoyer_message_periodique():
     await bot.wait_until_ready()
