@@ -24,6 +24,11 @@ async def on_message(message):
             
             # Appel à l'IA pour une réponse
             reponse = obtenir_reponse(prompt)
+
+            # Éviter les boucles en vérifiant si la réponse semble redondante
+            if prompt in reponse:
+                reponse = "Je suis désolé, je ne peux pas répondre précisément. Peux-tu reformuler ?"
+
             await message.channel.send(reponse)
 
         except Exception as e:
