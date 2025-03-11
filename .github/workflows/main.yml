@@ -35,8 +35,7 @@ jobs:
         python citations/citations.py &       # Lancer citations.py en arrière-plan
         python Règlement/reglement.py &       # Lancer reglement.py en arrière-plan
         python shifumi/shifumi.py &           # Lancer shifumi.py en arrière-plan
-        python bienvenu/bienvenu.py &         # Lancer bienvenu.py
-        python bot.py                         # Exécuter le nouveau script bot.py
+        python bot.py                         # Lancer le fichier bot.py
       env:
         DISCORD_BOT_TOKEN: ${{ secrets.DISCORD_BOT_TOKEN }}
         DISCORD_IA_TOKEN: ${{ secrets.DISCORD_IA_TOKEN }}
