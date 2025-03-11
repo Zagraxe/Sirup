@@ -3,37 +3,55 @@ name: Run Discord Bot
 on:
   push:
     branches:
-      - main
-  schedule:  # Exécution automatique toutes les 5 heures
-    - cron: "0 */5 * * *"
+      - main  # Exécute le workflow à chaque push sur main
+  schedule:
+    - cron: "0 */5 * * *"  # Exécution automatique toutes les 5 heures
 
 concurrency:
   group: bot-actions
-  cancel-in-progress: true
+  cancel-in-progress: true  # Annule les workflows en cours si un nouveau démarre
 
 jobs:
   run-bot:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
+    # Étape 1 : Cloner le dépôt GitHub
+    - name: Checkout code
+      uses: actions/checkout@v2
 
+    # Étape 2 : Configurer l'environnement Python
     - name: Set up Python
       uses: actions/setup-python@v2
       with:
-        python-version: '3.10'  # Version stable et recommandée
+        python-version: '3.10'  # Version recommandée de Python
 
+    # Étape 3 : Installer les dépendances
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
         pip install -r requirements.txt
 
-    - name: Run bot
-      run: |
-        echo DISCORD_BOT_TOKEN=${{ secrets.DISCORD_BOT_TOKEN }} >> .env
-        echo DISCORD_IA_TOKEN=${{ secrets.DISCORD_IA_TOKEN }} >> .env
-        python bot.py                         # Exécuter le fichier bot.py
+    # Étape 4 : Lancer le fichier bot principal
+    - name: Run main bot
       env:
         DISCORD_BOT_TOKEN: ${{ secrets.DISCORD_BOT_TOKEN }}
         DISCORD_IA_TOKEN: ${{ secrets.DISCORD_IA_TOKEN }}
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        python bot.py
+
+    # Étape 5 : Lancer le fichier Shifumi (si séparé)
+    - name: Run Shifumi bot
+      if: always()  # Exécute toujours cette étape pour inclure shifumi
+      env:
+        DISCORD_BOT_TOKEN: ${{ secrets.DISCORD_BOT_TOKEN }}
+      run: |
+        python Shifumi.py
+
+    # Étape 6 : Lancer le fichier citations (si nécessaire)
+    - name: Run Citations bot
+      if: always()  # Exécute cette étape
+      env:
+        DISCORD_BOT_TOKEN: ${{ secrets.DISCORD_BOT_TOKEN }}
+      run: |
+        python citation.py
