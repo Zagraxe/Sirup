@@ -21,7 +21,7 @@ jobs:
     - name: Set up Python
       uses: actions/setup-python@v2
       with:
-        python-version: '3.x'
+        python-version: '3.10'  # Version stable et compatible
 
     - name: Install dependencies
       run: |
@@ -35,7 +35,7 @@ jobs:
         python citations/citations.py &       # Lancer citations.py en arrière-plan
         python Règlement/reglement.py &       # Lancer reglement.py en arrière-plan
         python shifumi/shifumi.py &           # Lancer shifumi.py en arrière-plan
-        python bot.py                         # Lancer le fichier bot.py
+        python bot.py                         # Exécuter le fichier bot.py
       env:
         DISCORD_BOT_TOKEN: ${{ secrets.DISCORD_BOT_TOKEN }}
         DISCORD_IA_TOKEN: ${{ secrets.DISCORD_IA_TOKEN }}
