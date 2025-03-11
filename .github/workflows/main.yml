@@ -35,4 +35,5 @@ jobs:
         python bienvenu/bienvenu.py       # Lancer bienvenu.py
       env:
         DISCORD_BOT_TOKEN: ${{ secrets.DISCORD_BOT_TOKEN }}
+        DISCORD_IA_TOKEN: ${{ secrets.Discord_IA_Token }}
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
