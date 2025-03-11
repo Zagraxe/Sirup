@@ -73,10 +73,10 @@ jobs:
         echo "Lancement de shifumi.py..."
         python shifumi/shifumi.py
 
-    # Étape 8 : Lancer le bot Reglement
-    - name: Run Reglement Bot
-      env:
-        DISCORD_BOT_TOKEN: ${{ secrets.DISCORD_BOT_TOKEN }}
-      run: |
-        echo "Lancement de reglement.py..."
-        python Reglement/reglement.py
+    # Étape 8 : Lancer le bot Règlement
+- name: Run Règlement Bot
+  env:
+    DISCORD_BOT_TOKEN: ${{ secrets.DISCORD_BOT_TOKEN }}
+  run: |
+    echo "Lancement de Règlement/reglement.py..."
+    python Règlement/reglement.py
