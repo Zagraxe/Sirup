@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - main
+  schedule:  # Planifie une exécution automatique toutes les 5 heures
+    - cron: "0 */5 * * *"  # Tâche planifiée (cron job)
 
 concurrency:
   group: bot-actions
@@ -29,11 +31,46 @@ jobs:
     - name: Run bot
       run: |
         echo DISCORD_BOT_TOKEN=${{ secrets.DISCORD_BOT_TOKEN }} >> .env
+        echo DISCORD_IA_TOKEN=${{ secrets.DISCORD_IA_TOKEN }} >> .env
         python citations/citations.py &   # Lancer citations.py en arrière-plan
         python Règlement/reglement.py &   # Lancer reglement.py en arrière-plan
         python shifumi/shifumi.py &       # Lancer shifumi.py en arrière-plan
-        python bienvenu/bienvenu.py       # Lancer bienvenu.py
+        python bienvenu/bienvenu.py &     # Lancer bienvenu.py
+
+        # Tâche périodique avec IA
+        python -c "
+import os
+import asyncio
+from discord.ext import commands
+from ia import obtenir_reponse
+import discord
+
+# Initialisation du bot
+intents = discord.Intents.default()
+intents.messages = True
+bot = commands.Bot(command_prefix='!', intents=intents)
+
+# ID du salon (remplace par ton ID réel)
+TEST_CHANNEL_ID = 123456789012345678  # Remplace par l'ID de ton salon
+
+async def envoyer_message_periodique():
+    await bot.wait_until_ready()
+    channel = bot.get_channel(TEST_CHANNEL_ID)
+    if channel:
+        await channel.send(\"Nobles âmes, quelqu'un souhaite-t-il discuter ? ⚔️\")
+
+bot.loop.create_task(envoyer_message_periodique())
+
+@bot.event
+async def on_message(message):
+    if bot.user in message.mentions:  # Si le bot est mentionné
+        prompt = f\"Tu es Sirup, un chevalier médiéval. Réponds avec courtoisie : {message.content}\"
+        reponse = obtenir_reponse(prompt)
+        await message.channel.send(reponse)
+
+bot.run(os.getenv('DISCORD_BOT_TOKEN'))
+        "
       env:
         DISCORD_BOT_TOKEN: ${{ secrets.DISCORD_BOT_TOKEN }}
-        DISCORD_IA_TOKEN: ${{ secrets.Discord_IA_Token }}
+        DISCORD_IA_TOKEN: ${{ secrets.DISCORD_IA_TOKEN }}
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
