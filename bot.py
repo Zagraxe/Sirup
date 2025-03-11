@@ -1,4 +1,5 @@
 import os
+import discord
 from discord.ext import commands
 
 # Initialisation du bot
@@ -18,9 +19,9 @@ async def ping(ctx):
     await ctx.send("Pong ! Tout est opérationnel. 🏓")
 
 # Lancer le bot
-token = os.getenv('DISCORD_BOT_TOKEN')
+token = os.getenv('DISCORD_BOT_TOKEN')  # Récupère le token depuis les secrets
 if token:
-    print("Le token a été trouvé.")  # Debug
+    print("Le token a été trouvé.")  # Debug pour confirmer que le token est trouvé
     bot.run(token)
 else:
     print("Erreur : Le token du bot Discord n'est pas défini.")
