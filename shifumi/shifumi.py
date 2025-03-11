@@ -1,69 +1,84 @@
 import os
+import random
 import discord
 from discord.ext import commands
-import random
 
-print("Le bot Shifumi démarre...")  # Message de debug
+# Debug : Message pour indiquer le démarrage
+print("Le bot Shifumi démarre...")
 
-# Définir le token à partir des variables d'environnement
+# Définir le token depuis les variables d'environnement
 token = os.getenv('DISCORD_BOT_TOKEN')
 
-# Vérifier que la variable d'environnement est définie
+# Vérifier que le token est défini
 if not token:
-    print("Erreur : Token non défini.")
+    print("Erreur : Le token Discord n'est pas défini.")
     exit(1)
 else:
-    print("Token défini correctement.")
+    print("Token trouvé.")
 
-# Définir les intents nécessaires
+# Initialisation des intents nécessaires pour le bot
 intents = discord.Intents.default()
 intents.message_content = True
 
-# Initialisation du bot avec les intents
+# Création du bot avec les intents définis
 bot = commands.Bot(command_prefix='!', intents=intents)
 
-# Initialisation des scores
-scores = {"bot": {'win': 0, 'loss': 0, 'draw': 0}}
+# Initialisation des scores pour les utilisateurs
+scores = {"bot": {"win": 0, "loss": 0, "draw": 0}}
 
-# Options pour le jeu
+# Options de jeu pour Shifumi
 choices = ['pierre', 'papier', 'ciseaux']
 
+# Événement : Le bot est prêt
 @bot.event
 async def on_ready():
-    print(f'Nous sommes connectés en tant que {bot.user}')
-    print(f'ID du bot: {bot.user.id}')
+    print(f"Connecté en tant que {bot.user}")
+    print(f"ID du bot : {bot.user.id}")
 
+# Gestionnaire d'erreur : Commandes non trouvées ou erreurs
 @bot.event
 async def on_command_error(ctx, error):
-    if isinstance(error, commands.CommandNotFound) and ctx.command.name in ['shifumi', 'choisir']:
+    if isinstance(error, commands.CommandNotFound):
         await ctx.send(
-            "Commande non trouvée. Assurez-vous d'utiliser les commandes correctes : !shifumi et !choisir [ton choix]."
+            "Commande non trouvée. Utilise `!shifumi` pour commencer ou `!choisir [ton choix]` pour jouer !"
         )
         print(f"Erreur : {error}")
     else:
-        # Laisser la gestion des erreurs standard de discord.py s'occuper des autres commandes
+        # Laisser discord.py gérer les autres erreurs
         raise error
 
+# Commande principale pour démarrer une partie
 @bot.command(name='shifumi')
 async def shifumi(ctx):
     if ctx.author.id not in scores:
-        scores[ctx.author.id] = {'win': 0, 'loss': 0, 'draw': 0}
-    embed = discord.Embed(title="Shifumi - Pierre, Papier, Ciseaux", color=discord.Color.blue())
-    embed.add_field(name="Choisis : pierre, papier ou ciseaux", value="Tape !choisir suivi de ton choix")
+        scores[ctx.author.id] = {"win": 0, "loss": 0, "draw": 0}
+    embed = discord.Embed(
+        title="Shifumi - Pierre, Papier, Ciseaux",
+        description="Choisis `pierre`, `papier`, ou `ciseaux` pour jouer ! Tape `!choisir [ton choix]`.",
+        color=discord.Color.blue()
+    )
     print("Commande !shifumi appelée.")
     await ctx.send(embed=embed)
 
+# Commande pour faire un choix (pierre, papier ou ciseaux)
 @bot.command(name='choisir')
 async def choisir(ctx, choix: str):
     print(f"Commande !choisir appelée par {ctx.author.name} avec le choix {choix}")
     choix = choix.lower()
+    
+    # Vérification du choix de l'utilisateur
     if choix not in choices:
-        await ctx.send("Choix invalide. Choisis parmi : pierre, papier, ou ciseaux.")
-        print("Choix invalide reçu.")
+        await ctx.send("Choix invalide. Tu dois choisir entre `pierre`, `papier`, ou `ciseaux` !")
         return
+
+    # Le bot fait un choix aléatoire
     bot_choice = random.choice(choices)
+
+    # Initialiser le score si le joueur est nouveau
     if ctx.author.id not in scores:
-        scores[ctx.author.id] = {'win': 0, 'loss': 0, 'draw': 0}
+        scores[ctx.author.id] = {"win": 0, "loss": 0, "draw": 0}
+
+    # Déterminer le résultat
     if choix == bot_choice:
         result = "Égalité"
         scores[ctx.author.id]['draw'] += 1
@@ -75,34 +90,45 @@ async def choisir(ctx, choix: str):
     else:
         result = "Perdu"
         scores[ctx.author.id]['loss'] += 1
-        scores['bot']['win'] += 1  # Ajouter une victoire au bot
-    embed = discord.Embed(title="Shifumi - Résultat", color=discord.Color.green() if result == "Gagné" else discord.Color.red())
-    embed.add_field(name="Ton choix", value=choix)
-    embed.add_field(name="Choix du bot", value=bot_choice)
-    embed.add_field(name="Résultat", value=result)
-    embed.add_field(name="Score", value=f"Gagné: {scores[ctx.author.id]['win']}, Perdu: {scores[ctx.author.id]['loss']}, Égalité: {scores[ctx.author.id]['draw']}")
-    embed.set_footer(text="Tape !Sscore pour voir le classement actuel")
+        scores["bot"]['win'] += 1
+
+    # Créer un embed pour le résultat
+    embed = discord.Embed(
+        title="Shifumi - Résultat",
+        color=discord.Color.green() if result == "Gagné" else discord.Color.red()
+    )
+    embed.add_field(name="Ton choix", value=choix, inline=True)
+    embed.add_field(name="Choix du bot", value=bot_choice, inline=True)
+    embed.add_field(name="Résultat", value=result, inline=False)
+    embed.add_field(
+        name="Ton score",
+        value=f"Gagné: {scores[ctx.author.id]['win']}, Perdu: {scores[ctx.author.id]['loss']}, Égalité: {scores[ctx.author.id]['draw']}"
+    )
+    embed.set_footer(text="Tape `!Sscore` pour voir le classement actuel.")
     await ctx.send(embed=embed)
 
+# Commande pour afficher les scores
 @bot.command(name='Sscore')
 async def scoreshifumi(ctx):
-    # Ajouter un utilisateur fictif pour le bot
-    bot_user = type("BotUser", (object,), {"name": "Sir Up", "id": "bot"})
-    sorted_scores = sorted(scores.items(), key=lambda x: (x[1]['win'] / max(1, x[1]['loss']), x[1]['win']), reverse=True)
-    top_scores = sorted_scores[:5]
-    while len(top_scores) < 5:
-        top_scores.append(("N.A", {"win": "N.A", "loss": "N.A"}))
-    embed = discord.Embed(title="Tableau des Scores Shifumi", color=discord.Color.magenta())
-    lines = []
-    for i, (user_id, score) in enumerate(top_scores, 1):
-        if user_id == "bot":
-            user = bot_user
-        elif user_id == "N.A":
-            user = type("NAUser", (object,), {"name": "N.A"})
-        else:
-            user = await ctx.bot.fetch_user(user_id)
-        lines.append(f"Top {i}. {user.name}                {score['win']}/{score['loss']}")
-    embed.add_field(name="Top Joueurs", value="\n".join(lines), inline=True)
+    sorted_scores = sorted(
+        scores.items(),
+        key=lambda x: (x[1]['win'], -x[1]['loss']),
+        reverse=True
+    )
+    embed = discord.Embed(
+        title="Tableau des Scores Shifumi",
+        description="Voici le classement des meilleurs joueurs :",
+        color=discord.Color.magenta()
+    )
+    for i, (user_id, score) in enumerate(sorted_scores, 1):
+        user_name = "Bot" if user_id == "bot" else (await bot.fetch_user(user_id)).name
+        embed.add_field(
+            name=f"Top {i}",
+            value=f"**{user_name}** - Gagné: {score['win']}, Perdu: {score['loss']}, Égalité: {score['draw']}",
+            inline=False
+        )
+        if i >= 5:  # Limiter l'affichage aux 5 meilleurs
+            break
     print("Commande !Sscore appelée.")
     await ctx.send(embed=embed)
 
