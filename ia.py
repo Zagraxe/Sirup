@@ -1,34 +1,53 @@
 import requests
 import os
 
-# URL de l'API Hugging Face
-API_URL = "https://api-inference.huggingface.co/models/EleutherAI/gpt-j-6B"
-DISCORD_IA_TOKEN = os.getenv("DISCORD_IA_TOKEN")  # Utilise le nom correct
+# URL de l'API Hugging Face pour le modèle Bloom
+API_URL = "https://api-inference.huggingface.co/models/bigscience/bloom"
+DISCORD_IA_TOKEN = os.getenv("DISCORD_IA_TOKEN")  # Token API Hugging Face depuis les variables d'environnement
 
+# Vérifie si le token est défini
 if not DISCORD_IA_TOKEN:
     raise ValueError("Le token API Hugging Face est manquant. Assurez-vous qu'il est défini dans les variables d'environnement.")
 
 def obtenir_reponse(prompt):
+    """
+    Appelle l'API Hugging Face avec le prompt donné et retourne la réponse générée.
+    Gère les erreurs et vérifie les réponses vides.
+    """
     headers = {
-        "Authorization": f"Bearer {DISCORD_IA_TOKEN}"  # Utilise la bonne variable
+        "Authorization": f"Bearer {DISCORD_IA_TOKEN}"
     }
     payload = {
         "inputs": prompt,
-        "options": {"wait_for_model": True}
+        "options": {"wait_for_model": True}  # Indique à l'API d'attendre si le modèle est encore en cours de chargement
     }
 
     try:
+        # Appel à l'API Hugging Face
         response = requests.post(API_URL, headers=headers, json=payload)
-        print(f"Statut API : {response.status_code}")  # Log du statut HTTP
-        print(f"Réponse brute : {response.text}")  # Log de la réponse brute
+        
+        # Logs pour le débogage
+        print(f"Statut API : {response.status_code}")
+        print(f"Réponse brute : {response.text}")
 
+        # Vérifie si la réponse est réussie
         if response.status_code == 200:
-            result = response.json()
-            return result[0].get("generated_text", "Aucune réponse générée.")
+            try:
+                result = response.json()
+                # Vérifie que la réponse contient le texte généré
+                if result and len(result) > 0 and "generated_text" in result[0]:
+                    return result[0]["generated_text"]
+                else:
+                    return "L'API n'a pas généré de texte valide. Réessaie plus tard."
+            except ValueError as e:
+                print(f"Erreur lors du parsing JSON : {e}")
+                return "Une erreur est survenue lors de l'analyse de la réponse de l'IA."
         else:
-            print(f"Erreur API : {response.status_code}, {response.json()}")
-            return f"Je suis désolé, une erreur est survenue avec l'API : {response.status_code}."
+            # Gestion des erreurs de l'API
+            print(f"Erreur API : {response.status_code}, {response.text}")
+            return f"Erreur API : {response.status_code}. Message : {response.text}"
 
     except Exception as e:
-        print(f"Erreur lors de l'appel à l'API : {e}")  # Log des exceptions
-        return f"Une erreur est survenue avec l'API : {e}"
+        # Gestion des exceptions critiques
+        print(f"Erreur critique lors de l'appel à l'API : {e}")
+        return f"Une erreur critique est survenue lors de la connexion à l'API : {e}"
