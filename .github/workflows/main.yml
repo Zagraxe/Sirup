@@ -32,13 +32,20 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt
 
-    # Étape 4 : Vérifier les fichiers dans leurs sous-dossiers
+    # Étape 4 : Vérification des scripts
     - name: Verify all scripts exist
       run: |
+        ls -la ./
         ls -la citations/
-        if [ ! -f "bot.py" ]; then echo "bot.py is missing!" && exit 1; fi
-        if [ ! -f "citations/citations.py" ]; then echo "citations.py is missing!" && exit 1; fi
-        if [ ! -f "citations/Shifumi.py" ]; then echo "Shifumi.py is missing!" && exit 1; fi
+        ls -la shifumi/
+        ls -la Reglement/
+        if [ ! -f "bot.py" ]; then echo "Erreur : bot.py est manquant !" && exit 1; fi
+        if [ ! -f "ia.py" ]; then echo "Erreur : ia.py est manquant !" && exit 1; fi
+        if [ ! -f "citations/citations.py" ]; then echo "Erreur : citations.py est manquant !" && exit 1; fi
+        if [ ! -f "citations/keywords.txt" ]; then echo "Erreur : keywords.txt est manquant !" && exit 1; fi
+        if [ ! -f "citations/citations.txt" ]; then echo "Erreur : citations.txt est manquant !" && exit 1; fi
+        if [ ! -f "shifumi/shifumi.py" ]; then echo "Erreur : shifumi.py est manquant !" && exit 1; fi
+        if [ ! -f "Reglement/reglement.py" ]; then echo "Erreur : reglement.py est manquant !" && exit 1; fi
 
     # Étape 5 : Lancer le fichier principal (bot.py)
     - name: Run main bot
@@ -55,9 +62,16 @@ jobs:
       run: |
         python citations/citations.py
 
-    # Étape 7 : Lancer le bot Shifumi depuis `citations/`
+    # Étape 7 : Lancer le bot Shifumi
     - name: Run Shifumi bot
       env:
         DISCORD_BOT_TOKEN: ${{ secrets.DISCORD_BOT_TOKEN }}
       run: |
-        python citations/Shifumi.py
+        python shifumi/shifumi.py
+
+    # Étape 8 : Lancer le bot Règlement
+    - name: Run Règlement bot
+      env:
+        DISCORD_BOT_TOKEN: ${{ secrets.DISCORD_BOT_TOKEN }}
+      run: |
+        python Reglement/reglement.py
