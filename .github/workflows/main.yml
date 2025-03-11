@@ -32,7 +32,15 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt
 
-    # Étape 4 : Lancer le fichier bot principal
+    # Étape 4 : Vérifier que tous les fichiers sont présents
+    - name: Verify all scripts exist
+      run: |
+        ls -la
+        if [ ! -f "bot.py" ]; then echo "bot.py is missing!" && exit 1; fi
+        if [ ! -f "Shifumi.py" ]; then echo "Shifumi.py is missing!" && exit 1; fi
+        if [ ! -f "citation.py" ]; then echo "citation.py is missing!" && exit 1; fi
+
+    # Étape 5 : Lancer le fichier bot principal
     - name: Run main bot
       env:
         DISCORD_BOT_TOKEN: ${{ secrets.DISCORD_BOT_TOKEN }}
@@ -40,17 +48,17 @@ jobs:
       run: |
         python bot.py
 
-    # Étape 5 : Lancer le fichier Shifumi (si séparé)
+    # Étape 6 : Lancer le fichier Shifumi
     - name: Run Shifumi bot
-      if: always()  # Exécute toujours cette étape pour inclure shifumi
+      if: always()  # Toujours exécuter cette étape
       env:
         DISCORD_BOT_TOKEN: ${{ secrets.DISCORD_BOT_TOKEN }}
       run: |
         python Shifumi.py
 
-    # Étape 6 : Lancer le fichier citations (si nécessaire)
+    # Étape 7 : Lancer le fichier Citations bot
     - name: Run Citations bot
-      if: always()  # Exécute cette étape
+      if: always()
       env:
         DISCORD_BOT_TOKEN: ${{ secrets.DISCORD_BOT_TOKEN }}
       run: |
