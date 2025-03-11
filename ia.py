@@ -19,6 +19,7 @@ def obtenir_reponse(prompt):
     }
     payload = {
         "inputs": prompt,
+        "parameters": {"max_new_tokens": 50},  # Limite la taille de la réponse
         "options": {"wait_for_model": True}  # Indique à l'API d'attendre si le modèle est encore en cours de chargement
     }
 
@@ -35,8 +36,12 @@ def obtenir_reponse(prompt):
             try:
                 result = response.json()
                 # Vérifie que la réponse contient le texte généré
-                if result and len(result) > 0 and "generated_text" in result[0]:
-                    return result[0]["generated_text"]
+                if result and "generated_text" in result[0]:
+                    response_text = result[0]["generated_text"]
+                    # Vérifie si la réponse est identique au prompt
+                    if response_text.strip() == prompt.strip():
+                        return "Je suis désolé, je n'ai pas compris. Peux-tu reformuler ?"
+                    return response_text
                 else:
                     return "L'API n'a pas généré de texte valide. Réessaie plus tard."
             except ValueError as e:
