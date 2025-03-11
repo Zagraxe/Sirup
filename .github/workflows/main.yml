@@ -36,10 +36,9 @@ jobs:
     - name: Verify all scripts exist
       run: |
         ls -la citations/
-        ls -la shifumi/
         if [ ! -f "bot.py" ]; then echo "bot.py is missing!" && exit 1; fi
         if [ ! -f "citations/citations.py" ]; then echo "citations.py is missing!" && exit 1; fi
-        if [ ! -f "shifumi/Shifumi.py" ]; then echo "Shifumi.py is missing!" && exit 1; fi
+        if [ ! -f "citations/Shifumi.py" ]; then echo "Shifumi.py is missing!" && exit 1; fi
 
     # Étape 5 : Lancer le fichier principal (bot.py)
     - name: Run main bot
@@ -56,9 +55,9 @@ jobs:
       run: |
         python citations/citations.py
 
-    # Étape 7 : Lancer le bot Shifumi
+    # Étape 7 : Lancer le bot Shifumi depuis `citations/`
     - name: Run Shifumi bot
       env:
         DISCORD_BOT_TOKEN: ${{ secrets.DISCORD_BOT_TOKEN }}
       run: |
-        python shifumi/Shifumi.py
+        python citations/Shifumi.py
