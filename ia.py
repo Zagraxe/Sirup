@@ -19,8 +19,8 @@ def obtenir_reponse(prompt):
     }
     payload = {
         "inputs": prompt,
-        "parameters": {"max_new_tokens": 50},  # Limite la taille de la réponse
-        "options": {"wait_for_model": True}  # Indique à l'API d'attendre si le modèle est encore en cours de chargement
+        "parameters": {"max_new_tokens": 200},  # Permet des réponses détaillées
+        "options": {"wait_for_model": True}  # Attend que le modèle soit prêt
     }
 
     try:
